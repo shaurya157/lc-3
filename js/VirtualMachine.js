@@ -74,6 +74,7 @@ class VirtualMachine{
   }
 
   reset(){
+    console.log("RESET!");
     this.memory = new Uint16Array(this.address.MAX + 1);
     this.register = new Uint16Array(this.countReg);
 
@@ -95,6 +96,7 @@ class VirtualMachine{
   }
 
   step(){
+    console.log("Stepping to nxt frame");
     // debugger
     let i = 0;
     while(i < this.STEPS_PER_FRAME){
@@ -120,6 +122,7 @@ class VirtualMachine{
   }
 
   interrupt(){
+    console.log("Interrupting...");
     if(this.retryAfterInterrupt){
       this.retryAfterInterrupt = false;
       this.schedule();
@@ -150,11 +153,13 @@ class VirtualMachine{
   }
 
   loadOS(){
+    console.log('Loading OS...');
     let result = this.load(this.os);
     this.assert(result == this.EXIT_SUCCESS);
   }
 
   load(data){
+    console.log("Loading Data...");
     let arr = new Uint16Array(data.buffer);
     let loadAddress = this.swap16(arr[0]);
     let length = arr.length - 1;
@@ -178,6 +183,7 @@ class VirtualMachine{
     } else if(address == this.address.DDR){
       this.putChar(value);
     } else {
+      // console.log(`Writing ${value} to ${address}`);
       this.memory[address] = value;
     }
   }
@@ -196,11 +202,13 @@ class VirtualMachine{
     } else if(address == this.address.DDR){
       return 0;
     } else {
+      // console.log(`Reading ${address} address`);
       return this.memory[address];
     }
   }
 
   execute(instruction){
+    // console.log(`Executing ${instruction}`);
     let destinationReg, sourceReg, sourceReg1, sourceReg2, im5, current, desired, offset, baseReg, trap;
 
 
